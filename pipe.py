@@ -2,7 +2,6 @@ import ollama
 from datetime import datetime
 import json
 
-# 初始化设定
 init_manager = f"""
 我想請你玩一個角色扮演遊戲。
 你扮演一家公司的管理層，根據老板的話語向員工發送指示。老闆的話簡短而拐彎抹角，有時甚至與事情毫不相關，但你仍然需要推測老闆話裡真正的想法，自行判斷如何下指示。
@@ -48,7 +47,6 @@ init_staff = f"""
 [1,3,4]
 """
 
-# 定义 Manager 流程
 def manager_pipeline(event, boss_order):
     try:
         response = ollama.generate(model="qwen2.5:7b", prompt=f"事件：{event}；老板說：{boss_order}", system=init_manager)
@@ -56,7 +54,6 @@ def manager_pipeline(event, boss_order):
     except Exception as e:
         return f"Error: {str(e)}"
 
-# 定义 Staff 流程
 staff_personality = [
     [3, 5, 3, 1, 3, 2],
     [1, 1, 1, 1, 1, 1],
@@ -83,7 +80,6 @@ def staff_pipeline(manager_directive, num_staff):
     except Exception as e:
         return f"Error: {str(e)}"
 
-# 批量实验的事件和老板指令
 experiments = [
     {"event": "公司宣佈研發的新產品因技術問題延遲上市，導致股價當天暴跌15%。", "boss_order": "鸡肋"},
     {"event": "銷售部門本季度的收入超額完成了20%。", "boss_order": "繼續努力"},
