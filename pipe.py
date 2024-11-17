@@ -68,8 +68,8 @@ def staff_pipeline(event, manager_directive,num_staff):
 
 manger_order = manager_pipeline(event="公司宣佈研發的新產品因技術問題延遲上市，導致股價當天暴跌15%。",boss_order="鸡肋")
 print(manger_order)
-staffs = staff_pipeline(event="公司宣佈研發的新產品因技術問題延遲上市，導致股價當天暴跌15%。",manager_directive=manger_order,num_staff=5)
-print(staffs)
+staff = staff_pipeline(event="公司宣佈研發的新產品因技術問題延遲上市，導致股價當天暴跌15%。",manager_directive=manger_order,num_staff=5)
+print(staff)
 
 
 
