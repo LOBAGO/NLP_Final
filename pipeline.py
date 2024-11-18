@@ -3,7 +3,7 @@ from datetime import datetime
 import json
 import prompt
 
-model_name = "qwen2.5:latest"
+model_name = "qwen2.5:7b"
 
 def manager_pipeline(event, boss_order):
     try:
