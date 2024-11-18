@@ -2,8 +2,9 @@ import ollama
 from datetime import datetime
 import json
 import prompt
+import json
 
-model_name = "qwen2.5:latest"
+model_name = "qwen2.5:7b"
 
 def manager_pipeline(event, boss_order):
     try:
@@ -26,6 +27,10 @@ staff_personality = [
 
 def staff_pipeline(manager_directive, num_staff):
     try:
+        start_marker = "指令："
+        start_index = manager_directive.find(start_marker) + len(start_marker)
+        manager_directive = manager_directive[start_index:].strip()
+        print(manager_directive)
         response = ollama.generate(
             model=model_name,
             prompt=prompt.get_staff_prompt(num_staff, staff_personality, manager_directive),
