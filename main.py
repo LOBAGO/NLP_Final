@@ -53,7 +53,7 @@ def staff_pipeline(manager_directive, num_staff):
         return f"Error: {str(e)}"
 
 results = []
-epochs = 5
+epochs = 50
 for i in range(epochs):
     print(f"正在執行第 {i + 1} 組實驗...")
     event = get_random_data(Event_Path,datatype="content")

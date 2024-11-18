@@ -71,5 +71,22 @@ def get_staff_prompt(num_staff, staff_personality, manager_directive):
 管理層指示：{manager_directive}
 請以數組格式（[選項1, 選項2, 選項3...]）輸出每位員工的選擇，除了該數組你不需輸出其他文字。
 """
-    
     return prompt
+
+def get_manager_eval_ret(boss_reaction,manager_directive):
+        prompt = f"""
+        以下是一个公司发生的事件，老板的对事件的话语以及管理层对老板话语的解读，请你根据这些数据，给出老板的话语以及管理层解读相关性分数，以1-10表示。
+        -例子1
+        输入：
+        "boss_reaction": "今天下午打算去喝一杯咖啡。"
+        "manager_output": "我認為：老板希望公司能夠迅速將收購成果推向市場，同時保護核心技術以保持競爭優勢，並且尋找機會與其他企業合作，以加速公司在新興市場的發展。指令：1. 立即制定產品商業化戰略並快速推出市場計劃；2. 強化專利管理，確保所有技術資產得到適當保護；3. 寻找潛在的合作夥伴，探索策略性合作機會。"
+        输出：5
+
+        现在，为以下输入进行评分：
+        "boss_reaction": "{boss_reaction}"
+        "manager_output": "{manager_directive}"
+        """
+        return prompt
+
+
+    
