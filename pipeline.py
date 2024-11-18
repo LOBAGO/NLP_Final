@@ -57,12 +57,15 @@ epochs = 5
 for i in range(epochs):
     print(f"正在執行第 {i + 1} 組實驗...")
     event = get_random_data(Event_Path,datatype="content")
-    boss_order = get_random_data(Boss_reaction_Path,datatype="reaction")
-    manager_output = manager_pipeline(event,boss_order)
+    boss_reaction = get_random_data(Boss_reaction_Path,datatype="reaction")
+    manager_output = manager_pipeline(event,boss_reaction)
     staff_output = staff_pipeline(manager_output, num_staff=5)
     results.append({
         "id": i + 1,
-        "input": f"event:{event},boss_order:{boss_order}",
+        "input": {
+            "event": event,
+            'boss_reaction': boss_reaction
+        },
         "manager_output": manager_output,
         "staff_output": staff_output,
     })
