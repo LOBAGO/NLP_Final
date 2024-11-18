@@ -52,14 +52,25 @@ def staff_pipeline(manager_directive, num_staff):
     except Exception as e:
         return f"Error: {str(e)}"
 
+def boss_manager_eval(boss_reaction,manager_directive):
+    try:
+        response = ollama.generate(
+            model= model_name,
+            prompt= prompt.get_manager_eval_ret(boss_reaction,manager_directive)
+        )
+        return response.get('response', '無法提取 response 字段')
+    except Exception as e:
+        return f"Error: {str(e)}"
+
 results = []
-epochs = 50
+epochs = 10
 for i in range(epochs):
     print(f"正在執行第 {i + 1} 組實驗...")
     event = get_random_data(Event_Path,datatype="content")
     boss_reaction = get_random_data(Boss_reaction_Path,datatype="reaction")
     manager_output = manager_pipeline(event,boss_reaction)
     staff_output = staff_pipeline(manager_output, num_staff=5)
+    Relv_Rct = boss_manager_eval(boss_reaction,manager_output) 
     results.append({
         "id": i + 1,
         "input": {
@@ -68,6 +79,9 @@ for i in range(epochs):
         },
         "manager_output": manager_output,
         "staff_output": staff_output,
+        "eval":{
+            "Relv. Rct": Relv_Rct
+        }
     })
 
 output_file = f"./output/experiment_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
