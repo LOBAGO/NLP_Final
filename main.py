@@ -63,14 +63,16 @@ def boss_manager_eval(boss_reaction,manager_directive):
         return f"Error: {str(e)}"
 
 results = []
-epochs = 10
+epochs = 50
+relvrct = []
 for i in range(epochs):
     print(f"正在執行第 {i + 1} 組實驗...")
     event = get_random_data(Event_Path,datatype="content")
     boss_reaction = get_random_data(Boss_reaction_Path,datatype="reaction")
     manager_output = manager_pipeline(event,boss_reaction)
     staff_output = staff_pipeline(manager_output, num_staff=5)
-    Relv_Rct = boss_manager_eval(boss_reaction,manager_output) 
+    Relv_Rct = boss_manager_eval(boss_reaction,manager_output)
+    relvrct.append(Relv_Rct) 
     results.append({
         "id": i + 1,
         "input": {
@@ -88,4 +90,5 @@ output_file = f"./output/experiment_{datetime.now().strftime('%Y%m%d_%H%M%S')}.j
 with open(output_file, "w", encoding="utf-8") as f:
     json.dump(results, f, ensure_ascii=False, indent=4)
 
+print(relvrct)
 print(f"實驗完成：{output_file}")
