@@ -3,9 +3,26 @@ from datetime import datetime
 import json
 import prompt
 import json
+import random
 
 model_name = "qwen2.5:7b"
+Boss_reaction_Path = 'data/Boss_reaction.json'
+Event_Path = 'data/Event.json'
 
+
+import json
+import random
+
+def get_random_data(file_path,datatype):
+    with open(file_path, "r", encoding="utf-8") as file:
+        data = json.load(file)
+    if "events" in data and isinstance(data["events"], list) and len(data["events"]) > 0:
+        # 從 events 列表中隨機選擇一個事件
+        random_event = random.choice(data["events"])
+        return random_event[datatype]
+    else:
+        raise ValueError("data['events'] 不是有效的列表或沒有可選的事件")
+    
 def manager_pipeline(event, boss_order):
     try:
         response = ollama.generate(
@@ -40,22 +57,17 @@ def staff_pipeline(manager_directive, num_staff):
     except Exception as e:
         return f"Error: {str(e)}"
 
-experiments = [
-    {"event": "公司宣佈研發的新產品因技術問題延遲上市，導致股價當天暴跌15%。", "boss_order": "鸡肋"},
-    {"event": "銷售部門本季度的收入超額完成了20%。", "boss_order": "繼續努力"},
-    {"event": "市場部提出了新的廣告策略，但執行成本高於預算。", "boss_order": "再等等看"},
-    {"event": "公司的主要競爭對手最近推出了更具創新性的產品。", "boss_order": "隨機應變"},
-]
-
 results = []
-
-for i, exp in enumerate(experiments):
+epochs = 5
+for i in range(epochs):
     print(f"正在執行第 {i + 1} 組實驗...")
-    manager_output = manager_pipeline(exp["event"], exp["boss_order"])
+    event = get_random_data(Event_Path,datatype="content")
+    boss_order = get_random_data(Boss_reaction_Path,datatype="reaction")
+    manager_output = manager_pipeline(event,boss_order)
     staff_output = staff_pipeline(manager_output, num_staff=5)
     results.append({
         "id": i + 1,
-        "input": exp,
+        "input": f"event:{event},boss_order:{boss_order}",
         "manager_output": manager_output,
         "staff_output": staff_output,
     })
