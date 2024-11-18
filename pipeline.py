@@ -9,10 +9,6 @@ model_name = "qwen2.5:7b"
 Boss_reaction_Path = 'data/Boss_reaction.json'
 Event_Path = 'data/Event.json'
 
-
-import json
-import random
-
 def get_random_data(file_path,datatype):
     with open(file_path, "r", encoding="utf-8") as file:
         data = json.load(file)
