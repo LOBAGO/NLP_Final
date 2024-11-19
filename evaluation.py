@@ -37,10 +37,9 @@ def count_relv_emotion_times(data_key, data_path):
 
         group_counts = defaultdict(lambda: {'喜': 0, '怒': 0, '哀': 0, '樂': 0, 'total': 0})
 
-        for record in json_data:
+        for record in json_data["results"]:
             data_value = int(record[data_key]) 
             staff_output = json.loads(record["staff_output"])  
-
             for emotion in staff_output:
                 if emotion == 1:
                     group_counts[data_value]['喜'] += 1
@@ -94,8 +93,12 @@ def staff_eval_write_to_file(data_path):
     input測試文件地址，計算并輸出staff evaluation的結果到./eval/pearson
     '''
     eval_list = ['eval_rct', 'eval_evt', 'eval_evm']
+    with open(data_path, 'r', encoding='utf-8') as file:
+        json_data = json.load(file)
+    count = json_data["total_count"]
     output_data = {
-        'input_file': data_path
+        'input_file': data_path,
+        'total_count': count
     }
 
     for eval_key in eval_list:
@@ -136,10 +139,10 @@ def evaluation(file_path):
         })
         ids += 1
     filename = file_path.split('/')[-1].split('.')[0]
+    results_dict = {"total_count": ids - 1, "input_file": filename ,"results": results}
     output_file = f"./eval/relv/relv_{filename}.json"
     with open(output_file, 'w', encoding='utf-8') as f:
-        json.dump(results, f, ensure_ascii=False, indent=4)
-
+        json.dump(results_dict, f, ensure_ascii=False, indent=4)
     return output_file
 
 if __name__ == "__main__":
