@@ -1,0 +1,38 @@
+{
+    "Relv.rct": {
+        "喜比例": {
+            "correlation": -0.34,
+            "p_value": 0.5811
+        },
+        "怒比例": {
+            "correlation": -0.24,
+            "p_value": 0.6933
+        },
+        "哀比例": {
+            "correlation": -0.34,
+            "p_value": 0.5811
+        },
+        "樂比例": {
+            "correlation": -0.21,
+            "p_value": 0.7395
+        }
+    },
+    "Relv.evt": {
+        "喜比例": {
+            "correlation": -0.0,
+            "p_value": 1.0
+        },
+        "怒比例": {
+            "correlation": 0.52,
+            "p_value": 0.3677
+        },
+        "哀比例": {
+            "correlation": -0.29,
+            "p_value": 0.6376
+        },
+        "樂比例": {
+            "correlation": 0.49,
+            "p_value": 0.4075
+        }
+    }
+}
