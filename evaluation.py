@@ -88,7 +88,7 @@ def compute_pearson_correlation_coefficient(data: pd.DataFrame):
     return results
 
 
-def staff_eval_write_to_file(data_path):
+def evaluate_with_pearson(data_path):
     '''
     input測試文件地址，計算并輸出staff evaluation的結果到./eval/pearson
     '''
@@ -114,7 +114,8 @@ def staff_eval_write_to_file(data_path):
 
     print(f"Staff eval result saved：{output_file}")
 
-def evaluation(file_path):
+
+def evaluate(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
         ids = 1
@@ -144,7 +145,7 @@ def evaluation(file_path):
 
 if __name__ == "__main__":
     # eval_result = 'eval/relv/relv_experiment_20241118_212332.json'
-    eval_result = evaluation('output/experiment_20241120_002723.json')
-    staff_eval_write_to_file(eval_result)
+    eval_result = evaluate('output/experiment_20241120_002723.json')
+    evaluate_with_pearson(eval_result)
 
    

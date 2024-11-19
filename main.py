@@ -5,10 +5,12 @@ import prompt
 import json
 import random
 
+from evaluation import evaluate, evaluate_with_pearson
+
 model_name = "qwen2.5:7b"
 Boss_reaction_Path = 'data/Boss_reaction.json'
 Event_Path = 'data/Event.json'
-Staff_personality_Path = 'data\Staff_personality.json' 
+Staff_personality_Path = 'data/Staff_personality.json' 
 
 def get_random_data(file_path,datatype):
     with open(file_path, "r", encoding="utf-8") as file:
@@ -24,7 +26,8 @@ def load_personality(file_path):
     with open(file_path, 'r') as file:
         data = json.load(file)
     staff_personality = [entry["personality"] for entry in data["personalities"]]
-    return staff_personality
+    num_staff = int(data['num_staff'])
+    return num_staff, staff_personality
 
     
 def manager_pipeline(event, boss_order):
@@ -38,13 +41,10 @@ def manager_pipeline(event, boss_order):
     except Exception as e:
         return f"Error: {str(e)}"
 
-staff_personality = load_personality(Staff_personality_Path)
+num_staff, staff_personality = load_personality(Staff_personality_Path)
 
-def staff_pipeline(manager_directive, num_staff):
+def staff_pipeline(manager_directive):
     try:
-        start_marker = "指令："
-        start_index = manager_directive.find(start_marker) + len(start_marker)
-        manager_directive = manager_directive[start_index:].strip()
         response = ollama.generate(
             model=model_name,
             prompt=prompt.get_staff_prompt(num_staff, staff_personality, manager_directive),
@@ -64,30 +64,37 @@ def boss_manager_eval(boss_reaction, manager_directive):
     except Exception as e:
         return f"Error: {str(e)}"
 
-results = []
-epochs = 5
-for i in range(epochs):
-    print(f"正在執行第 {i + 1} 組實驗...")
-    event = get_random_data(Event_Path, datatype="content")
-    boss_reaction = get_random_data(Boss_reaction_Path, datatype="reaction")
-    manager_output = manager_pipeline(event, boss_reaction)
-    start_marker = "指令："
-    start_index = manager_output.find(start_marker) + len(start_marker)
-    manager_directive = manager_output[start_index:].strip()
-    staff_output = staff_pipeline(manager_output, num_staff=5)
-    Relv_Rct = boss_manager_eval(boss_reaction, manager_output)
-    results.append({
-        "id": i + 1,
-        "input": {
-            "event": event,
-            'boss_reaction': boss_reaction
-        },
-        "manager_output": manager_output,
-        "manager_directive" : manager_directive,
-        "staff_output": staff_output,
-    })
 
-output_file = f"./output/experiment_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-with open(output_file, "w", encoding="utf-8") as f:
-    json.dump(results, f, ensure_ascii=False, indent=4)
-print(f"實驗完成：{output_file}")
+def inference():
+    results = []
+    epochs = 1
+    for i in range(epochs):
+        print(f"正在執行第 {i + 1} 組實驗...")
+        event = get_random_data(Event_Path, datatype="content")
+        boss_reaction = get_random_data(Boss_reaction_Path, datatype="reaction")
+        manager_output = manager_pipeline(event, boss_reaction)
+        start_marker = "指令："
+        start_index = manager_output.find(start_marker) + len(start_marker)
+        manager_directive = manager_output[start_index:].strip()
+        staff_output = staff_pipeline(manager_directive)
+        results.append({
+            "id": i + 1,
+            "input": {
+                "event": event,
+                'boss_reaction': boss_reaction
+            },
+            "manager_output": manager_output,
+            "manager_directive" : manager_directive,
+            "staff_output": staff_output,
+        })
+
+    output_file = f"./output/experiment_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    with open(output_file, "w", encoding="utf-8") as f:
+        json.dump(results, f, ensure_ascii=False, indent=4)
+    print(f"實驗完成：{output_file}")
+    return output_file
+
+if __name__ == '__main__':
+    output = inference()
+    eval_output = evaluate(output)
+    evaluate_with_pearson(eval_output)
