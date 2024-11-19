@@ -5,10 +5,10 @@ import json
 from datetime import datetime
 
 # manager evaluation
-def get_relevance_with_reaction():
+def get_relv_rct_score():
     ...
 
-def get_relevance_with_event():
+def get_relv_evt_score():
     ...
 
 
