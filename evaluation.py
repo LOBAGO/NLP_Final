@@ -73,7 +73,7 @@ def calculate_emotion_ratios(group_counts):
     return result
 
 
-def conunt_pearsonr(data: pd.DataFrame):
+def compute_pearson_correlation_coefficient(data: pd.DataFrame):
     '''
     計算relv和情緒比例之間的Pearson相關係數和p值
         - 如果r接近1或-1，說明 Relv. Rct 或 Relv. Evt與該情緒選擇比例有強線性關係。
@@ -91,23 +91,20 @@ def conunt_pearsonr(data: pd.DataFrame):
 
 def staff_eval_write_to_file(data_path):
     '''
-    input測試文件地址，計算并輸出staff evaluation的結果到./eval/result
+    input測試文件地址，計算并輸出staff evaluation的結果到./eval/pearson
     '''
-    rct_emo = count_relv_emotion_times('Relv. Rct', data_path)
-    evt_emo = count_relv_emotion_times('Relv. Evt', data_path)
-
-    rct_dt = calculate_emotion_ratios(rct_emo)
-    ect_dt = calculate_emotion_ratios(evt_emo)
-
-    rec_result = conunt_pearsonr(rct_dt)
-    evt_result = conunt_pearsonr(ect_dt)
-
+    eval_list = ['eval_rct', 'eval_evt', 'eval_evm']
     output_data = {
-    'Relv.rct': rec_result,
-    'Relv.evt': evt_result
+        'input_file': data_path
     }
 
-    output_file = f"./eval/result/staff_eval_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    for eval_key in eval_list:
+        emotions = count_relv_emotion_times(eval_key, data_path)
+        emotion_ratios = calculate_emotion_ratios(emotions)
+        result = compute_pearson_correlation_coefficient(emotion_ratios)
+        output_data[eval_key] = result
+
+    output_file = f"./eval/pearson/staff_eval_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
 
     with open(output_file, 'w', encoding='utf-8') as file:
         json.dump(output_data, file, ensure_ascii=False, indent=4)
@@ -131,18 +128,23 @@ def evaluation(file_path):
         eval_evt = get_relv_evt_score(event=event,boss_reaction=boss_order)
         eval_evm = get_relv_evt_socre_manager(event=event,manager_directive=manager_directive)
         results.append({
-        "id": ids,
-        "staff_output": staff_output,
-        "eval_rct": eval_rct,
-        "eval_evt": eval_evt,
-        "eval_evm": eval_evm
+            "id": ids,
+            "staff_output": staff_output,
+            "eval_rct": eval_rct,
+            "eval_evt": eval_evt,
+            "eval_evm": eval_evm
         })
         ids += 1
     filename = file_path.split('/')[-1].split('.')[0]
     output_file = f"./eval/relv/relv_{filename}.json"
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(results, f, ensure_ascii=False, indent=4)
+
+    return output_file
+
 if __name__ == "__main__":
-    evaluation('output/experiment_20241118_212332.json')
+    # eval_result = 'eval/relv/relv_experiment_20241118_212332.json'
+    eval_result = evaluation('output/experiment_20241118_212332.json')
+    staff_eval_write_to_file(eval_result)
 
    
