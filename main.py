@@ -8,6 +8,7 @@ import random
 model_name = "qwen2.5:7b"
 Boss_reaction_Path = 'data/Boss_reaction.json'
 Event_Path = 'data/Event.json'
+Staff_personality_Path = 'data\Staff_personality.json' 
 
 def get_random_data(file_path,datatype):
     with open(file_path, "r", encoding="utf-8") as file:
@@ -18,6 +19,13 @@ def get_random_data(file_path,datatype):
         return random_event[datatype]
     else:
         raise ValueError("data['events'] 不是有效的列表或沒有可選的事件")
+
+def load_personality(file_path):
+    with open(file_path, 'r') as file:
+        data = json.load(file)
+    staff_personality = [entry["personality"] for entry in data["personalities"]]
+    return staff_personality
+
     
 def manager_pipeline(event, boss_order):
     try:
@@ -30,13 +38,7 @@ def manager_pipeline(event, boss_order):
     except Exception as e:
         return f"Error: {str(e)}"
 
-staff_personality = [
-    [3, 5, 3, 1, 3, 2],
-    [1, 1, 1, 1, 1, 1],
-    [5, 5, 5, 5, 5, 5],
-    [5, 5, 5, 1, 1, 1],
-    [1, 1, 1, 5, 5, 5],
-]
+staff_personality = load_personality(Staff_personality_Path)
 
 def staff_pipeline(manager_directive, num_staff):
     try:
@@ -63,7 +65,7 @@ def boss_manager_eval(boss_reaction, manager_directive):
         return f"Error: {str(e)}"
 
 results = []
-epochs = 50
+epochs = 5
 relvrct = []
 for i in range(epochs):
     print(f"正在執行第 {i + 1} 組實驗...")

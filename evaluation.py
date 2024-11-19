@@ -9,11 +9,10 @@ data_path = "./eval/test_data/test.json"
 
 # manager evaluation
 def get_relv_rct_score():
-    ...
+    return
 
 def get_relv_evt_score():
-    ...
-
+    return
 
 
 # staff evaluation
