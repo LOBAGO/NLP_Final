@@ -6,13 +6,13 @@ from datetime import datetime
 from collections import defaultdict
 import prompt as pt
 import ollama
-
-data_path = "./eval/test_data/test.json"
+from tqdm import tqdm
+data_path = "./eval/relv/staff_eval_20241119_210310.json"
 model_name = "qwen2.5:7b"
 
-# manager evaluation
+# evaluation
 def get_relv_rct_score(boss_order,manager_directive):
-    prompt = pt.get_eval_boss_evt_prompt(boss_order,manager_directive)
+    prompt = pt.get_eval_manager_rct_prompt(boss_order,manager_directive)
     relv_rct = ollama.generate(model=model_name,prompt=prompt).get('response', '無法提取 response 字段')
     return relv_rct
 
@@ -20,6 +20,11 @@ def get_relv_evt_score(event,boss_reaction):
     prompt = pt.get_eval_boss_evt_prompt(event,boss_reaction)
     relv_evt = ollama.generate(model=model_name,prompt=prompt).get('response', '無法提取 response 字段')
     return relv_evt
+
+def get_relv_evt_socre_manager(event,manager_directive):
+    prompt = pt.get_eval_boss_evt_prompt(event,manager_directive)
+    relv_evm = ollama.generate(model=model_name,prompt=prompt).get('response', '無法提取 response 字段')
+    return relv_evm
 
 
 # staff evaluation
@@ -33,7 +38,7 @@ def count_relv_emotion_times(data_key, data_path):
         group_counts = defaultdict(lambda: {'喜': 0, '怒': 0, '哀': 0, '樂': 0, 'total': 0})
 
         for record in json_data:
-            data_value = int(record["eval"][data_key]) 
+            data_value = int(record[data_key]) 
             staff_output = json.loads(record["staff_output"])  
 
             for emotion in staff_output:
@@ -114,24 +119,27 @@ def evaluation(file_path):
         data = json.load(f)
         ids = 1
         results = []
-        results.append({"file": file_path})
-    for item in data:
+    for item in tqdm(data, desc="evaluation", unit="item"):
         event = item['input']['event']
         boss_order = item['input']['boss_reaction']
         manager_directive = item['manager_output']
+        staff_output = item['staff_output']
         start_marker = "指令："
         start_index = manager_directive.find(start_marker) + len(start_marker)
         manager_directive = manager_directive[start_index:].strip()
         eval_rct = get_relv_rct_score(boss_order=boss_order,manager_directive=manager_directive)
         eval_evt = get_relv_evt_score(event=event,boss_reaction=boss_order)
+        eval_evm = get_relv_evt_socre_manager(event=event,manager_directive=manager_directive)
         results.append({
         "id": ids,
+        "staff_output": staff_output,
         "eval_rct": eval_rct,
         "eval_evt": eval_evt,
+        "eval_evm": eval_evm
         })
         ids += 1
-    output_file = f"./eval/relv/evaluation_result_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-
+    filename = file_path.split('/')[-1].split('.')[0]
+    output_file = f"./eval/relv/relv_{filename}.json"
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(results, f, ensure_ascii=False, indent=4)
 if __name__ == "__main__":
