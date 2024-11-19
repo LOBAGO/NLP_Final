@@ -74,7 +74,6 @@ for i in range(epochs):
     manager_output = manager_pipeline(event, boss_reaction)
     staff_output = staff_pipeline(manager_output, num_staff=5)
     Relv_Rct = boss_manager_eval(boss_reaction, manager_output)
-    relvrct.append(Relv_Rct) 
     results.append({
         "id": i + 1,
         "input": {
@@ -91,6 +90,4 @@ for i in range(epochs):
 output_file = f"./output/experiment_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
 with open(output_file, "w", encoding="utf-8") as f:
     json.dump(results, f, ensure_ascii=False, indent=4)
-
-print(relvrct)
 print(f"實驗完成：{output_file}")

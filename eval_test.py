@@ -12,3 +12,4 @@ manager_directive = "成立專項整合小組，確保收購後的業務無縫�
 prompt = pt.get_eval_manager_rct_prompt(boss_reaction, manager_directive)
 result = ollama.generate(model="qwen2.5:7b", prompt=prompt).get('response', '無法提取 response 字段')
 print(result)
+

@@ -4,15 +4,22 @@ import os
 import json
 from datetime import datetime
 from collections import defaultdict
+import prompt as pt
+import ollama
 
 data_path = "./eval/test_data/test.json"
+model_name = "qwen2.5:7b"
 
 # manager evaluation
-def get_relv_rct_score():
-    return
+def get_relv_rct_score(boss_order,manager_directive):
+    prompt = pt.get_eval_boss_evt_prompt(boss_order,manager_directive)
+    relv_rct = ollama.generate(model=model_name,prompt=prompt).get('response', '無法提取 response 字段')
+    return relv_rct
 
-def get_relv_evt_score():
-    return
+def get_relv_evt_score(event,boss_reaction):
+    prompt = pt.get_eval_boss_evt_prompt(event,boss_reaction)
+    relv_evt = ollama.generate(model=model_name,prompt=prompt).get('response', '無法提取 response 字段')
+    return relv_evt
 
 
 # staff evaluation
@@ -102,8 +109,32 @@ def staff_eval_write_to_file(data_path):
 
     print(f"Staff eval result saved：{output_file}")
 
+def evaluation(file_path):
+    with open(file_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        ids = 1
+        results = []
+        results.append({"file": file_path})
+    for item in data:
+        event = item['input']['event']
+        boss_order = item['input']['boss_reaction']
+        manager_directive = item['manager_output']
+        start_marker = "指令："
+        start_index = manager_directive.find(start_marker) + len(start_marker)
+        manager_directive = manager_directive[start_index:].strip()
+        eval_rct = get_relv_rct_score(boss_order=boss_order,manager_directive=manager_directive)
+        eval_evt = get_relv_evt_score(event=event,boss_reaction=boss_order)
+        results.append({
+        "id": ids,
+        "eval_rct": eval_rct,
+        "eval_evt": eval_evt,
+        })
+        ids += 1
+    output_file = f"./eval/relv/evaluation_result_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
 
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(results, f, ensure_ascii=False, indent=4)
 if __name__ == "__main__":
-    staff_eval_write_to_file(data_path)
+    evaluation('output/experiment_20241118_212332.json')
 
    
