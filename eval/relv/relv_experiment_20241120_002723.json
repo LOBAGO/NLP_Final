@@ -1,0 +1,41 @@
+{
+    "total_count": 5,
+    "input_file": "experiment_20241120_002723",
+    "results": [
+        {
+            "id": 1,
+            "staff_output": "[2,2,1,4,4]",
+            "eval_rct": "2",
+            "eval_evt": "1",
+            "eval_evm": "4"
+        },
+        {
+            "id": 2,
+            "staff_output": "[2, 3, 1, 1, 4]",
+            "eval_rct": "5",
+            "eval_evt": "3",
+            "eval_evm": "2"
+        },
+        {
+            "id": 3,
+            "staff_output": "[2, 2, 1, 4, 4]",
+            "eval_rct": "2",
+            "eval_evt": "1",
+            "eval_evm": "4"
+        },
+        {
+            "id": 4,
+            "staff_output": "[2, 2, 1, 4, 4]",
+            "eval_rct": "2",
+            "eval_evt": "1",
+            "eval_evm": "3"
+        },
+        {
+            "id": 5,
+            "staff_output": "[3, 1, 5, 5, 3]",
+            "eval_rct": "1",
+            "eval_evt": "1",
+            "eval_evm": "4"
+        }
+    ]
+}

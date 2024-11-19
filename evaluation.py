@@ -122,11 +122,8 @@ def evaluation(file_path):
     for item in tqdm(data, desc="evaluation", unit="item"):
         event = item['input']['event']
         boss_order = item['input']['boss_reaction']
-        manager_directive = item['manager_output']
+        manager_directive = item['manager_directive']
         staff_output = item['staff_output']
-        start_marker = "指令："
-        start_index = manager_directive.find(start_marker) + len(start_marker)
-        manager_directive = manager_directive[start_index:].strip()
         eval_rct = get_relv_rct_score(boss_order=boss_order,manager_directive=manager_directive)
         eval_evt = get_relv_evt_score(event=event,boss_reaction=boss_order)
         eval_evm = get_relv_evt_socre_manager(event=event,manager_directive=manager_directive)
@@ -147,7 +144,7 @@ def evaluation(file_path):
 
 if __name__ == "__main__":
     # eval_result = 'eval/relv/relv_experiment_20241118_212332.json'
-    eval_result = evaluation('output/experiment_20241118_212332.json')
+    eval_result = evaluation('output/experiment_20241120_002723.json')
     staff_eval_write_to_file(eval_result)
 
    
