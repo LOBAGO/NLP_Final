@@ -12,13 +12,13 @@ Boss_reaction_Path = 'data/Boss_reaction.json'
 Event_Path = 'data/Event.json'
 Staff_personality_Path = 'data/Staff_personality.json' 
 
-def get_random_data(file_path,datatype):
+def get_random_data(file_path, *datatype):
     with open(file_path, "r", encoding="utf-8") as file:
         data = json.load(file)
     if "events" in data and isinstance(data["events"], list) and len(data["events"]) > 0:
         # 從 events 列表中隨機選擇一個事件
         random_event = random.choice(data["events"])
-        return random_event[datatype]
+        return tuple(random_event[dt] for dt in datatype)
     else:
         raise ValueError("data['events'] 不是有效的列表或沒有可選的事件")
 
@@ -70,8 +70,8 @@ def inference():
     epochs = 1
     for i in range(epochs):
         print(f"正在執行第 {i + 1} 組實驗...")
-        event = get_random_data(Event_Path, datatype="content")
-        boss_reaction = get_random_data(Boss_reaction_Path, datatype="reaction")
+        event, = get_random_data(Event_Path, "content")
+        boss_reaction, reaction_type = get_random_data(Boss_reaction_Path, "reaction", "type")
         manager_output = manager_pipeline(event, boss_reaction)
         start_marker = "指令："
         start_index = manager_output.find(start_marker) + len(start_marker)
@@ -81,7 +81,8 @@ def inference():
             "id": i + 1,
             "input": {
                 "event": event,
-                'boss_reaction': boss_reaction
+                'boss_reaction': boss_reaction,
+                'type': reaction_type
             },
             "manager_output": manager_output,
             "manager_directive" : manager_directive,
