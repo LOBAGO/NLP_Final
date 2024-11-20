@@ -6,8 +6,9 @@ import json
 import random
 
 from evaluation import evaluate, evaluate_with_pearson
+from tqdm import tqdm
 
-model_name = "qwen2.5:7b"
+model_name = "qwen2.5:14b"
 Boss_reaction_Path = 'data/Boss_reaction.json'
 Event_Path = 'data/Event.json'
 Staff_personality_Path = 'data/Staff_personality.json' 
@@ -67,9 +68,8 @@ def boss_manager_eval(boss_reaction, manager_directive):
 
 def inference():
     results = []
-    epochs = 1
-    for i in range(epochs):
-        print(f"正在執行第 {i + 1} 組實驗...")
+    epochs = 50
+    for i in tqdm(range(epochs), desc="inference", unit="epochs"): 
         event, = get_random_data(Event_Path, "content")
         boss_reaction, reaction_type = get_random_data(Boss_reaction_Path, "reaction", "type")
         manager_output = manager_pipeline(event, boss_reaction)
