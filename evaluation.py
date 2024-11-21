@@ -28,7 +28,7 @@ def get_relv_evt_socre_manager(model_name,event,manager_directive):
     relv_evm = ollama.generate(model=model_name,prompt=prompt).get('response', '無法提取 response 字段')
     return relv_evm
 
-def get_eval_sentiment_score(event):
+def get_eval_sentiment_score(model_name,event):
     prompt = pt.get_eval_sentiment_prompt(event)
     sentiment_score = ollama.generate(model=model_name,prompt=prompt).get('response', '無法提取 response 字段')
     return sentiment_score
@@ -134,7 +134,7 @@ def evaluate(model_name,file_path):
         eval_rct = get_relv_rct_score(model_name=model_name,boss_order=boss_order,manager_directive=manager_directive)
         eval_evt = get_relv_evt_score(model_name=model_name,event=event,boss_reaction=boss_order)
         eval_evm = get_relv_evt_socre_manager(model_name=model_name,event=event,manager_directive=manager_directive)
-
+        eval_sentiment =get_eval_sentiment_score(model_name=model_name,event=event)
         results.append({
             "id": ids,
             "staff_output": staff_output,

@@ -1,0 +1,57 @@
+[
+    {
+        "id": 1,
+        "input": {
+            "event": "公司捐贈大筆資金給全球氣候變化研究。",
+            "boss_reaction": "昨晚夢到飛去宇宙旅行了！",
+            "type": "random"
+        },
+        "manager_output": "我認為：老板可能對公司的社會責任感感到欣慰，但更關心個人的未來和興趣。\n指令：繼續推進公益項目，同時關注公司長遠發展策略。",
+        "manager_directive": "繼續推進公益項目，同時關注公司長遠發展策略。",
+        "staff_output": "[2,4,1,5,3]"
+    },
+    {
+        "id": 2,
+        "input": {
+            "event": "旗下產品因技術突破，獲得全球媒體廣泛報導。",
+            "boss_reaction": "下班後吃火鍋怎麼樣？",
+            "type": "random"
+        },
+        "manager_output": "我認為：老板可能對公司成績感到滿意，想 Celebration 一下。\n指令：安排一個小聚，大家一起慶祝這個好消息。",
+        "manager_directive": "安排一個小聚，大家一起慶祝這個好消息。",
+        "staff_output": "[2,1,5,4,5]"
+    },
+    {
+        "id": 3,
+        "input": {
+            "event": "技術團隊成功開發出可用於醫療的高精度機器人。",
+            "boss_reaction": "利用進入全球500強榜單的機會，擴展高端合作夥伴，並吸引更多投資以支持下一階段的技術突破。",
+            "type": "normal"
+        },
+        "manager_output": "我認為：雖然技術團隊已取得進展，但公司仍需著重於市場拓展和資金籌集。\n指令： TECH TEAM 需持續開發新功能，同時市場部應積極尋找全球500強合作機會並推廣產品。財務部則需制定更積極的募資策略以支援未來研發。",
+        "manager_directive": "TECH TEAM 需持續開發新功能，同時市場部應積極尋找全球500強合作機會並推廣產品。財務部則需制定更積極的募資策略以支援未來研發。",
+        "staff_output": "[2,1,5,4,5]"
+    },
+    {
+        "id": 4,
+        "input": {
+            "event": "公司與軍方簽署百億美元合同，開發戰術AI系統。",
+            "boss_reaction": "迅速成立專項工作組，確保合同執行到位並符合所有規範。同時，與市場部合作，將這次合作的成功進一步傳播，提升公司品牌。",
+            "type": "normal"
+        },
+        "manager_output": "我認為：老板重視合同的執行和品牌形象的提升。\n指令：立即組織專案小組，確保合同順利進行，並加強市場宣傳工作，提高公司知名度。",
+        "manager_directive": "立即組織專案小組，確保合同順利進行，並加強市場宣傳工作，提高公司知名度。",
+        "staff_output": "[2,1,5,4,3]"
+    },
+    {
+        "id": 5,
+        "input": {
+            "event": "內部員工意外中標全球某項技術標準制定工作。",
+            "boss_reaction": "將該安全認證作為全球市場的推廣重點，與更多國家合作，開拓新的市場領域。",
+            "type": "normal"
+        },
+        "manager_output": "我認為：老板強調安全認證的重要性，並希望藉此機會拓展國際業務。\n指令： Immediate steps include enhancing our safety certification process, preparing detailed market entry strategies for potential new markets, and strengthening international partnerships.",
+        "manager_directive": "Immediate steps include enhancing our safety certification process, preparing detailed market entry strategies for potential new markets, and strengthening international partnerships.",
+        "staff_output": "[2,1,5,4,3]"
+    }
+]

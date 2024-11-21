@@ -1,0 +1,46 @@
+{
+    "total_count": 5,
+    "input_file": "experiment_20241121_233530",
+    "results": [
+        {
+            "id": 1,
+            "staff_output": "[2,4,1,5,3]",
+            "eval_rct": "1",
+            "eval_evt": "1",
+            "eval_evm": "2",
+            "eval_sentiment": "1"
+        },
+        {
+            "id": 2,
+            "staff_output": "[2,1,5,4,5]",
+            "eval_rct": "2",
+            "eval_evt": "1",
+            "eval_evm": "2",
+            "eval_sentiment": "1"
+        },
+        {
+            "id": 3,
+            "staff_output": "[2,1,5,4,5]",
+            "eval_rct": "4",
+            "eval_evt": "2",
+            "eval_evm": "4",
+            "eval_sentiment": "1"
+        },
+        {
+            "id": 4,
+            "staff_output": "[2,1,5,4,3]",
+            "eval_rct": "4",
+            "eval_evt": "4",
+            "eval_evm": "4",
+            "eval_sentiment": "1"
+        },
+        {
+            "id": 5,
+            "staff_output": "[2,1,5,4,3]",
+            "eval_rct": "4",
+            "eval_evt": "3",
+            "eval_evm": "2",
+            "eval_sentiment": "1"
+        }
+    ]
+}
