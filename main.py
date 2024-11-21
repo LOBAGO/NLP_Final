@@ -4,6 +4,8 @@ import json
 import prompt
 import json
 import random
+from tqdm import tqdm
+
 
 from evaluation import evaluate, evaluate_with_pearson
 
@@ -67,9 +69,8 @@ def boss_manager_eval(boss_reaction, manager_directive):
 
 def inference():
     results = []
-    epochs = 1
-    for i in range(epochs):
-        print(f"正在執行第 {i + 1} 組實驗...")
+    epochs = 10
+    for i in tqdm(range(epochs), desc="Processing",unit="unit"):
         event, = get_random_data(Event_Path, "content")
         boss_reaction, reaction_type = get_random_data(Boss_reaction_Path, "reaction", "type")
         manager_output = manager_pipeline(event, boss_reaction)
