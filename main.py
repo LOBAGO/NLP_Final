@@ -28,7 +28,7 @@ def get_random_data(file_path, *datatype):
         raise ValueError("data['events'] 不是有效的列表或沒有可選的事件")
 
 def load_personality(file_path):
-    with open(file_path, 'r') as file:
+    with open(file_path, 'r', encoding="utf-8") as file:
         data = json.load(file)
     staff_personality = [entry["personality"] for entry in data["personalities"]]
     num_staff = int(data['num_staff'])
