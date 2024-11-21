@@ -88,8 +88,9 @@ def inference(model_name,epochs):
         })
 
     output_file = f"./output/experiment_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    results_dict = {"total_count": epochs, "model": model_name ,"results": results}
     with open(output_file, "w", encoding="utf-8") as f:
-        json.dump(results, f, ensure_ascii=False, indent=4)
+        json.dump(results_dict, f, ensure_ascii=False, indent=4)
     print(f"實驗完成：{output_file}")
     return output_file
 

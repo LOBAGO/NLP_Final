@@ -20,7 +20,6 @@ def single_experience(epochs):
     result_7b = []
     result_3b = []
     result_14b = []
-
     for i in tqdm(range(epochs)):
         event, = get_random_data(Event_Path, "content")
         boss_reaction, reaction_type = get_random_data(Boss_reaction_Path, "reaction", "type")
@@ -61,16 +60,19 @@ def single_experience(epochs):
             "manager_directive" : manager_directive,
         })
     output_file = f"./output/single_experiment/experiment_qwen2.5-3b.json"
+    results_dict = {"total_count": epochs, "model": q3b ,"results": result_3b}
     with open(output_file, "w", encoding="utf-8") as f:
-        json.dump(result_3b, f, ensure_ascii=False, indent=4)
+        json.dump(results_dict, f, ensure_ascii=False, indent=4)
 
     output_file = f"./output/single_experiment/experiment_qwen2.5-7b.json"
+    results_dict = {"total_count": epochs, "model": q7b ,"results": result_7b}
     with open(output_file, "w", encoding="utf-8") as f:
-        json.dump(result_7b, f, ensure_ascii=False, indent=4)
+        json.dump(results_dict, f, ensure_ascii=False, indent=4)
 
     output_file = f"./output/single_experiment/experiment_qwen2.5-14b.json"
+    results_dict = {"total_count": epochs, "model": q14b ,"results": result_14b}
     with open(output_file, "w", encoding="utf-8") as f:
-        json.dump(result_14b, f, ensure_ascii=False, indent=4)
+        json.dump(results_dict, f, ensure_ascii=False, indent=4)
     return
 
 if __name__ == "__main__":

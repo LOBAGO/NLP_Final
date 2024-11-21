@@ -126,7 +126,7 @@ def evaluate(model_name,file_path):
         data = json.load(f)
         ids = 1
         results = []
-    for item in tqdm(data, desc="evaluation", unit="item"):
+    for item in tqdm(data["results"], desc="evaluation", unit="item"):
         event = item['input']['event']
         boss_order = item['input']['boss_reaction']
         manager_directive = item['manager_directive']
@@ -145,7 +145,7 @@ def evaluate(model_name,file_path):
         })
         ids += 1
     filename = file_path.split('/')[-1].split('.')[0]
-    results_dict = {"total_count": ids - 1, "input_file": filename ,"results": results}
+    results_dict = {"total_count": ids - 1, "input_file": filename ,"model": model_name,"results": results}
     output_file = f"./eval/relv/relv_{filename}.json"
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(results_dict, f, ensure_ascii=False, indent=4)
