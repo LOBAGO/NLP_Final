@@ -10,7 +10,7 @@ from tqdm import tqdm
 from evaluation import evaluate, evaluate_with_pearson
 from tqdm import tqdm
 
-model_name = "qwen2.5:14b"
+model_name = "qwen2.5:7b"
 Boss_reaction_Path = 'data/Boss_reaction.json'
 Event_Path = 'data/Event.json'
 Staff_personality_Path = 'data/Staff_personality.json' 
