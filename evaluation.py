@@ -8,20 +8,22 @@ import prompt as pt
 import ollama
 from tqdm import tqdm
 data_path = "./eval/relv/staff_eval_20241119_210310.json"
-model_name = "qwen2.5:7b"
+q7b = "qwen2.5:7b"
+q3b = "qwen2.5:3b"
+q14b = "qwen2.5:14b"
 
 # evaluation
-def get_relv_rct_score(boss_order,manager_directive):
+def get_relv_rct_score(model_name,boss_order,manager_directive):
     prompt = pt.get_eval_manager_rct_prompt(boss_order,manager_directive)
     relv_rct = ollama.generate(model=model_name,prompt=prompt).get('response', '無法提取 response 字段')
     return relv_rct
 
-def get_relv_evt_score(event,boss_reaction):
+def get_relv_evt_score(model_name,event,boss_reaction):
     prompt = pt.get_eval_boss_evt_prompt(event,boss_reaction)
     relv_evt = ollama.generate(model=model_name,prompt=prompt).get('response', '無法提取 response 字段')
     return relv_evt
 
-def get_relv_evt_socre_manager(event,manager_directive):
+def get_relv_evt_socre_manager(model_name,event,manager_directive):
     prompt = pt.get_eval_boss_evt_prompt(event,manager_directive)
     relv_evm = ollama.generate(model=model_name,prompt=prompt).get('response', '無法提取 response 字段')
     return relv_evm
@@ -115,7 +117,7 @@ def evaluate_with_pearson(data_path):
     print(f"Staff eval result saved：{output_file}")
 
 
-def evaluate(file_path):
+def evaluate(model_name,file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
         ids = 1
@@ -125,9 +127,10 @@ def evaluate(file_path):
         boss_order = item['input']['boss_reaction']
         manager_directive = item['manager_directive']
         staff_output = item['staff_output']
-        eval_rct = get_relv_rct_score(boss_order=boss_order,manager_directive=manager_directive)
-        eval_evt = get_relv_evt_score(event=event,boss_reaction=boss_order)
-        eval_evm = get_relv_evt_socre_manager(event=event,manager_directive=manager_directive)
+        eval_rct = get_relv_rct_score(model_name=model_name,boss_order=boss_order,manager_directive=manager_directive)
+        eval_evt = get_relv_evt_score(model_name=model_name,event=event,boss_reaction=boss_order)
+        eval_evm = get_relv_evt_socre_manager(model_name=model_name,event=event,manager_directive=manager_directive)
+
         results.append({
             "id": ids,
             "staff_output": staff_output,

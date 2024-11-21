@@ -4,14 +4,16 @@ import json
 import prompt
 import json
 import random
-
 from evaluation import evaluate, evaluate_with_pearson
 from tqdm import tqdm
 
-model_name = "qwen2.5:14b"
 Boss_reaction_Path = 'data/Boss_reaction.json'
 Event_Path = 'data/Event.json'
-Staff_personality_Path = 'data/Staff_personality.json' 
+Staff_personality_Path = 'data/Staff_personality.json'
+q7b = "qwen2.5:7b"
+q3b = "qwen2.5:3b"
+q14b = "qwen2.5:14b"
+
 
 def get_random_data(file_path, *datatype):
     with open(file_path, "r", encoding="utf-8") as file:
@@ -31,7 +33,7 @@ def load_personality(file_path):
     return num_staff, staff_personality
 
     
-def manager_pipeline(event, boss_order):
+def manager_pipeline(model_name,event, boss_order):
     try:
         response = ollama.generate(
             model=model_name, 
@@ -44,7 +46,7 @@ def manager_pipeline(event, boss_order):
 
 num_staff, staff_personality = load_personality(Staff_personality_Path)
 
-def staff_pipeline(manager_directive):
+def staff_pipeline(model_name,manager_directive):
     try:
         response = ollama.generate(
             model=model_name,
@@ -55,28 +57,22 @@ def staff_pipeline(manager_directive):
     except Exception as e:
         return f"Error: {str(e)}"
 
-def boss_manager_eval(boss_reaction, manager_directive):
-    try:
-        response = ollama.generate(
-            model= model_name,
-            prompt= prompt.get_eval_manager_rct_prompt(boss_reaction, manager_directive)
-        )
-        return response.get('response', '無法提取 response 字段')
-    except Exception as e:
-        return f"Error: {str(e)}"
+def clip_words(marker,words):
+        start_marker = marker
+        start_index = words.find(start_marker) + len(start_marker)
+        words = words[start_index:].strip()
+        return words
 
 
-def inference():
+
+def inference(model_name,epochs):
     results = []
-    epochs = 50
     for i in tqdm(range(epochs), desc="inference", unit="epochs"): 
         event, = get_random_data(Event_Path, "content")
         boss_reaction, reaction_type = get_random_data(Boss_reaction_Path, "reaction", "type")
-        manager_output = manager_pipeline(event, boss_reaction)
-        start_marker = "指令："
-        start_index = manager_output.find(start_marker) + len(start_marker)
-        manager_directive = manager_output[start_index:].strip()
-        staff_output = staff_pipeline(manager_directive)
+        manager_output = manager_pipeline(model_name=model_name,event=event, boss_order=boss_reaction)
+        manager_directive = clip_words(marker="指令：",words = manager_output)
+        staff_output = staff_pipeline(model_name=model_name,manager_directive=manager_directive)
         results.append({
             "id": i + 1,
             "input": {
@@ -96,6 +92,6 @@ def inference():
     return output_file
 
 if __name__ == '__main__':
-    output = inference()
-    eval_output = evaluate(output)
+    output = inference(model_name=q7b,epochs=5)
+    eval_output = evaluate(model_name=q7b,file_path=output)
     evaluate_with_pearson(eval_output)
