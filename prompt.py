@@ -152,4 +152,25 @@ def get_eval_boss_evt_prompt(event, boss_reaction):
 '''
     return prompt
 
+
+def get_eval_sentiment_prompt(sentence):
+    prompt = f'''
+你將收到一段描述，請你判斷這段描述的影響是正面的還是負面的。如果描述是正面的，輸出1。如果描述是負面的，輸出0。
+
+模擬示例--
+假設以下是模擬參數：
+描述："因天氣異常，產品原材料供應受到影響。"
+
+輸出：0
+--
+
+現在，請你根據以下輸入進行評分。你只需要以數字形式輸出評分，不需要作出解釋，你只需輸出數字。
+
+輸入：
+描述：{sentence}
+
+輸出：
+'''
+    return prompt
+
     

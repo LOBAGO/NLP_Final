@@ -4,6 +4,8 @@ import json
 import prompt
 import json
 import random
+from tqdm import tqdm
+
 from evaluation import evaluate, evaluate_with_pearson
 from tqdm import tqdm
 
