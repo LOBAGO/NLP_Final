@@ -26,6 +26,10 @@ def get_relv_evt_socre_manager(event,manager_directive):
     relv_evm = ollama.generate(model=model_name,prompt=prompt).get('response', '無法提取 response 字段')
     return relv_evm
 
+def get_eval_sentiment_score(event):
+    prompt = pt.get_eval_sentiment_prompt(event)
+    sentiment_score = ollama.generate(model=model_name,prompt=prompt).get('response', '無法提取 response 字段')
+    return sentiment_score
 
 # staff evaluation
 def count_relv_emotion_times(data_key, data_path):
@@ -54,9 +58,10 @@ def count_relv_emotion_times(data_key, data_path):
 
         return group_counts
 
-def calculate_emotion_ratios(group_counts):
+def calculate_emotion_ratios(group_counts, rating_len):
     result = {'喜比例': [], '怒比例': [], '哀比例': [], '樂比例': []}
-    for key in range(1, 6):  # 按 Relv. 值 1 到 5 進行處理
+    data_range = range(0, 2) if rating_len == 2 else range(1, rating_len+1) # 按 Relv. 值 1 到 5 進行處理
+    for key in data_range:  
         total = group_counts[key]['total']
         if total > 0:
             joy_ratio = group_counts[key]['喜'] / total
@@ -72,7 +77,7 @@ def calculate_emotion_ratios(group_counts):
     return result
 
 
-def compute_pearson_correlation_coefficient(data: pd.DataFrame):
+def compute_pearson_correlation_coefficient(data: pd.DataFrame, rating_len):
     '''
     計算relv和情緒比例之間的Pearson相關係數和p值
         - 如果r接近1或-1，說明 Relv. Rct 或 Relv. Evt與該情緒選擇比例有強線性關係。
@@ -80,9 +85,8 @@ def compute_pearson_correlation_coefficient(data: pd.DataFrame):
     '''
 
     results = {}
-
     for emotion in ['喜比例', '怒比例', '哀比例', '樂比例']:
-        r, p = pearsonr([1,2,3,4,5], data[emotion]) #level 1 to 5
+        r, p = pearsonr(list(range(1, rating_len+1)), data[emotion])
         results[emotion] = {"correlation": round(r, 2), "p_value": round(p, 4)}
 
     return results
@@ -92,7 +96,7 @@ def evaluate_with_pearson(data_path):
     '''
     input測試文件地址，計算并輸出staff evaluation的結果到./eval/pearson
     '''
-    eval_list = ['eval_rct', 'eval_evt', 'eval_evm']
+    eval_list = [('eval_rct', 5), ('eval_evt', 5), ('eval_evm', 5)]
     with open(data_path, 'r', encoding='utf-8') as file:
         json_data = json.load(file)
     count = json_data["total_count"]
@@ -101,10 +105,10 @@ def evaluate_with_pearson(data_path):
         'total_count': count
     }
 
-    for eval_key in eval_list:
+    for eval_key, rating_len in eval_list:
         emotions = count_relv_emotion_times(eval_key, data_path)
-        emotion_ratios = calculate_emotion_ratios(emotions)
-        result = compute_pearson_correlation_coefficient(emotion_ratios)
+        emotion_ratios = calculate_emotion_ratios(emotions, rating_len)
+        result = compute_pearson_correlation_coefficient(emotion_ratios, rating_len)
         output_data[eval_key] = result
 
     output_file = f"./eval/pearson/staff_eval_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
@@ -128,12 +132,14 @@ def evaluate(file_path):
         eval_rct = get_relv_rct_score(boss_order=boss_order,manager_directive=manager_directive)
         eval_evt = get_relv_evt_score(event=event,boss_reaction=boss_order)
         eval_evm = get_relv_evt_socre_manager(event=event,manager_directive=manager_directive)
+        eval_sentiment = get_eval_sentiment_score(event=event)
         results.append({
             "id": ids,
             "staff_output": staff_output,
             "eval_rct": eval_rct,
             "eval_evt": eval_evt,
-            "eval_evm": eval_evm
+            "eval_evm": eval_evm,
+            "eval_sentiment": eval_sentiment
         })
         ids += 1
     filename = file_path.split('/')[-1].split('.')[0]
@@ -144,8 +150,8 @@ def evaluate(file_path):
     return output_file
 
 if __name__ == "__main__":
-    # eval_result = 'eval/relv/relv_experiment_20241118_212332.json'
-    eval_result = evaluate('output/experiment_20241120_002723.json')
-    evaluate_with_pearson(eval_result)
+    file = 'output/experiment_20241121_173335.json'
+    eval_result = evaluate(file)
+    evaluate_with_pearson('eval/relv/relv_experiment_20241121_173335.json')
 
    
