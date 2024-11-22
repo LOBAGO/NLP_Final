@@ -1,0 +1,58 @@
+{
+    "input_file": "./eval/relv/relv_experiment_20241123_030740.json",
+    "total_count": 1200,
+    "eval_rct": {
+        "喜比例": {
+            "correlation": -0.49,
+            "p_value": 0.3986
+        },
+        "怒比例": {
+            "correlation": 0.59,
+            "p_value": 0.2937
+        },
+        "哀比例": {
+            "correlation": 0.62,
+            "p_value": 0.2639
+        },
+        "樂比例": {
+            "correlation": 0.25,
+            "p_value": 0.6796
+        }
+    },
+    "eval_evt": {
+        "喜比例": {
+            "correlation": -0.66,
+            "p_value": 0.2214
+        },
+        "怒比例": {
+            "correlation": -0.57,
+            "p_value": 0.3146
+        },
+        "哀比例": {
+            "correlation": 0.66,
+            "p_value": 0.2291
+        },
+        "樂比例": {
+            "correlation": 0.69,
+            "p_value": 0.1959
+        }
+    },
+    "eval_evm": {
+        "喜比例": {
+            "correlation": -0.31,
+            "p_value": 0.617
+        },
+        "怒比例": {
+            "correlation": -0.22,
+            "p_value": 0.7234
+        },
+        "哀比例": {
+            "correlation": 0.4,
+            "p_value": 0.5052
+        },
+        "樂比例": {
+            "correlation": -0.43,
+            "p_value": 0.468
+        }
+    }
+}
