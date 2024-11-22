@@ -1,0 +1,16 @@
+{
+    "num_staff": 10,
+    "personalities": [
+        {"id": 1, "personality": [5, 4, 5, 5, 3, 5], "base_on": "Elon Mask"},
+        {"id": 2, "personality": [4, 4, 4, 5, 4, 4], "base_on": "Bill Gates"},
+        {"id": 5, "personality": [3, 4, 4, 4, 3, 5], "base_on": "周星馳"},
+        {"id": 7, "personality": [4, 3, 4, 5, 3, 5], "base_on": "畢卡索"},
+        {"id": 9, "personality": [3, 5, 4, 5, 5, 3], "base_on": "孔子"},
+
+        {"id": 11, "personality": [1, 2, 1, 2, 2, 1], "base_on": "none"},
+        {"id": 12, "personality": [3, 2, 3, 1, 1, 1], "base_on": "none"},
+        {"id": 13, "personality": [2, 1, 4, 4, 2, 4], "base_on": "none"},
+        {"id": 14, "personality": [3, 3, 3, 3, 3, 3], "base_on": "none"},
+        {"id": 15, "personality": [5, 1, 2, 4, 1, 1], "base_on": "none"}
+    ]
+}

@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 Boss_reaction_Path = 'data/Boss_reaction.json'
 Event_Path = 'data/Event.json'
-Staff_personality_Path = 'data/Staff_personality.json'
+Staff_personality_Path = 'data/Staff_personality_avg.json'
 q7b = "qwen2.5:7b"
 q3b = "qwen2.5:3b"
 q14b = "qwen2.5:14b"

@@ -1,0 +1,47 @@
+{
+    "total_count": 5,
+    "input_file": "experiment_20241123_004927",
+    "model": "qwen2.5:7b",
+    "results": [
+        {
+            "id": 1,
+            "staff_output": "[a, a, d, a, a, d, c, c, c, b]",
+            "eval_rct": "2",
+            "eval_evt": "1",
+            "eval_evm": "2",
+            "eval_sentiment": "1"
+        },
+        {
+            "id": 2,
+            "staff_output": "[b, a, c, a, b, d, c, c, c, d]",
+            "eval_rct": "4",
+            "eval_evt": "3",
+            "eval_evm": "2",
+            "eval_sentiment": "1"
+        },
+        {
+            "id": 3,
+            "staff_output": "[a, a, b, a, a, c, c, c, c, d]",
+            "eval_rct": "4",
+            "eval_evt": "2",
+            "eval_evm": "3",
+            "eval_sentiment": "0"
+        },
+        {
+            "id": 4,
+            "staff_output": "[b, a, c, a, a, d, c, c, b, d]",
+            "eval_rct": "1",
+            "eval_evt": "1",
+            "eval_evm": "2",
+            "eval_sentiment": "1"
+        },
+        {
+            "id": 5,
+            "staff_output": "[a, a, b, a, b, c, c, c, c, d]",
+            "eval_rct": "4",
+            "eval_evt": "3",
+            "eval_evm": "2",
+            "eval_sentiment": "0"
+        }
+    ]
+}

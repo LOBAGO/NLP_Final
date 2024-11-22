@@ -35,30 +35,33 @@ def get_eval_sentiment_score(model_name,event):
 
 # staff evaluation
 def count_relv_emotion_times(data_key, data_path):
-        '''
-        計算不同data_key('Relv. Rct' 或 'Relv. Evt')中四種情緒的出現次數
-        '''
-        with open(data_path, 'r', encoding='utf-8') as file:
-            json_data = json.load(file)
+    '''
+    計算不同data_key('Relv. Rct' 或 'Relv. Evt')中四種情緒的出現次數
+    '''
+    with open(data_path, 'r', encoding='utf-8') as file:
+        json_data = json.load(file)
 
-        group_counts = defaultdict(lambda: {'喜': 0, '怒': 0, '哀': 0, '樂': 0, 'total': 0})
+    group_counts = defaultdict(lambda: {'喜': 0, '怒': 0, '哀': 0, '樂': 0, 'total': 0})
+    for record in json_data["results"]:
+        data_value = int(record[data_key])
 
-        for record in json_data["results"]:
-            data_value = int(record[data_key]) 
-            staff_output = json.loads(record["staff_output"])  
-            for emotion in staff_output:
-                if emotion == 1:
-                    group_counts[data_value]['喜'] += 1
-                elif emotion == 2:
-                    group_counts[data_value]['怒'] += 1
-                elif emotion == 3:
-                    group_counts[data_value]['哀'] += 1
-                elif emotion == 4:
-                    group_counts[data_value]['樂'] += 1
+        list_str = record['staff_output']
+        list_str = list_str.strip('[]').replace(' ', '')
+        staff_output = list_str.split(',')
 
-            group_counts[data_value]['total'] += len(staff_output)
+        for emotion in staff_output:
+            if emotion == 'a':
+                group_counts[data_value]['喜'] += 1
+            elif emotion == 'b':
+                group_counts[data_value]['怒'] += 1
+            elif emotion == 'c':
+                group_counts[data_value]['哀'] += 1
+            elif emotion == 'd':
+                group_counts[data_value]['樂'] += 1
 
-        return group_counts
+        group_counts[data_value]['total'] += len(staff_output)
+
+    return group_counts
 
 def calculate_emotion_ratios(group_counts, rating_len):
     result = {'喜比例': [], '怒比例': [], '哀比例': [], '樂比例': []}
@@ -134,7 +137,7 @@ def evaluate(model_name,file_path):
         eval_rct = get_relv_rct_score(model_name=model_name,boss_order=boss_order,manager_directive=manager_directive)
         eval_evt = get_relv_evt_score(model_name=model_name,event=event,boss_reaction=boss_order)
         eval_evm = get_relv_evt_socre_manager(model_name=model_name,event=event,manager_directive=manager_directive)
-        eval_sentiment =get_eval_sentiment_score(model_name=model_name,event=event)
+        eval_sentiment = get_eval_sentiment_score(model_name=model_name,event=event)
         results.append({
             "id": ids,
             "staff_output": staff_output,
@@ -152,8 +155,8 @@ def evaluate(model_name,file_path):
     return output_file
 
 if __name__ == "__main__":
-    file = 'output/experiment_20241121_173335.json'
-    eval_result = evaluate(file)
-    evaluate_with_pearson('eval/relv/relv_experiment_20241121_173335.json')
+    file = 'output/experiment_20241123_004927.json'
+    # eval_result = evaluate(q7b, file)
+    evaluate_with_pearson('eval/relv/relv_experiment_20241123_004927.json')
 
    
